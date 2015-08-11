@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>圆形进度条-canvas</title>
+	<style type="text/css">
+		* {
+			padding: 0; 
+			margin: 0;
+		}
+		.container {
+			position: relative;
+		}
+		.canvas_box {
+			height: 200px;
+		}
+		canvas {
+			position: absolute;
+			/*transform: rotate(-90deg);*/
+			transition: all .5s;
+		}
+		.progress {
+			z-index: 51;
+		}
+		.circle {
+			z-index: 50;
+		}
+		.input {
+			margin: 30px 0 0 30px;
+		}
+		.input .period {
+			display: inline-block;
+			height: 24px;
+			padding: 3px;
+		}
+		.input .button {
+			display: inline-block;
+			width: 100px;
+			height: 30px;
+			line-height: 30px;
+			color: #fff;
+			text-align: center;
+			font-size: 14px;
+			text-decoration: none;
+			border-radius: 5px;
+			background-color: #ff3c3c;
+
+		}
+		.input .button:hover {
+			background-color: #F07575;
+		}
+		.clock {
+			position: absolute;
+			top: 118px;
+			left: 137px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="container">
+		<div class="canvas_box">
+			<canvas class="progress" width="130" height="130"></canvas>
+			<canvas class="circle" width="130" height="130"></canvas>
+			<p class="clock"><em>0</em>秒</p>
+		</div>
+		<div class="input">
+			<label><input class="duration" name="duration" /></label>
+			<a class="button" href="javascipt:;">开始倒计时</a>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		window.onload = function() {
+			var circle = document.querySelector('.circle'), // 进度条背景
+				ctxCir = circle.getContext('2d');
+
+			// 绘制背景圆形
+			ctxCir.beginPath();
+			ctxCir.arc(65, 65, 62, 0, 2*Math.PI);
+			ctxCir.lineWidth = 3;
+			ctxCir.strokeStyle = '#e1e1e1';
+			ctxCir.stroke();
+			ctxCir.closePath();
+		}	
+		
+		// 绘制倒计时圆形
+		var countDown = function() {
+			var progress = document.querySelector('.progress'), // 画布
+				ctxProg = progress.getContext('2d'),
+				clock = document.querySelector('.clock em'), // 倒计时显示
+				duration = document.querySelector('.duration').value || 10, //倒计时时间，默认10S 
+				index = 0, // 计数器
+				startAngle = 0, // 起始角度
+				endAngle; // 终止角度
+
+			clock.innerHTML = duration;
+
+
+			var timer = setInterval(function() {
+				index++; // 每计时1S，计数器自增1
+
+				endAngle = 2*(index/duration)*Math.PI;
+				// 绘制进度条
+				ctxProg.beginPath();
+				ctxProg.arc(65, 65, 62, startAngle, endAngle);
+				ctxProg.lineWidth = 3;
+				ctxProg.strokeStyle = 'green';
+				ctxProg.stroke();
+				clock.innerHTML = duration - index; // 设置倒计时
+				startAngle = endAngle;
+				if (index == duration) {
+
+					ctxProg.closePath();
+					clearInterval(timer);
+				}
+
+			}, 1000)
+				
+		}
+
+
+		document.querySelector('.button').onclick = countDown;
+	</script>
+</body>
+</html>
