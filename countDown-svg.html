@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>圆形进度条-svg</title>
+	<style type="text/css">
+		circle {
+		    -webkit-transition: stroke-dasharray .25s;
+		    transition: stroke-dasharray .25s;
+		}
+		.input {
+			margin: 30px 0 0 30px;
+		}
+		.input .period {
+			display: inline-block;
+			height: 24px;
+			padding: 3px;
+		}
+		.input .button {
+			display: inline-block;
+			width: 100px;
+			height: 30px;
+			line-height: 30px;
+			color: #fff;
+			text-align: center;
+			font-size: 14px;
+			text-decoration: none;
+			border-radius: 5px;
+			background-color: #ff3c3c;
+		}
+	</style>
+</head>
+<body>
+	<svg width="440" height="440" viewbox="0 0 440 440">
+	    <circle cx="220" cy="220" r="200" stroke-width="20" stroke="#D1D3D7" fill="none"></circle>
+	    <circle cx="220" cy="220" r="200" stroke-width="20" stroke="#00A5E0" fill="none" transform="matrix(0,-1,1,0,0,440)" stroke-dasharray=""></circle>
+	    <span class="counter"><i>0</i>秒</span>
+	</svg>
+	<div class="input">
+		<label><input class="duration" name="duration" /></label>
+		<a class="button" href="javascipt:;">开始倒计时</a>
+	</div>
+
+
+
+	<script type="text/javascript">
+        var countDown = function() {
+        	var counter = document.querySelector('.counter i'),  // 倒计时显示
+        		radius = document.querySelectorAll('circle')[1].getAttribute('r'),
+        		duration = document.querySelector('.duration').value*1000 || 10000, // 倒计时，默认10s
+        		counterNum = duration / 1000, // 倒计时数字显示
+		    	circle = document.querySelectorAll('circle')[1], // 第二个SVG圆形，用来模拟进度
+	        	length = Math.PI * 2 * radius, // 圆周长度
+	        	percent = 0; // 百分比
+	        circle.setAttribute('stroke-dasharray', 0 + " " + length); // 进度条初始化
+	        counter.innerHTML = counterNum; // 初始化倒计时数字
+	        var timer = setInterval(function() {
+	        	percent += 1000 / duration;
+	        	counterNum -= 1;
+	        	counter.innerHTML = counterNum;
+	        	console.log(percent, counterNum)
+	        	
+	        	circle.setAttribute('stroke-dasharray', length * percent + " " + length);
+	        	if (Math.abs(1 - percent) <= 0.001) { // 倒计时时间在1000000ms可行
+	        		counter.innerHTML = counterNum = 0;
+	        		clearInterval(timer)
+	        	}
+	        }, 1000)
+        }
+        
+        document.querySelector('.button').onclick = countDown;
+	</script>
+</body>
+</html>
